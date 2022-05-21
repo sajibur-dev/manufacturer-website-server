@@ -41,7 +41,7 @@ app.use(express.json());
 // main api : 
 
 app.get('/',(req,res)=>{
-    res.send('app is running');
+    res.send({message:'app is running'});
 })
 
 
