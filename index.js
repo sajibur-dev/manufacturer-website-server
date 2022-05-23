@@ -42,7 +42,12 @@ const run = async () => {
 
         const productCollection = client.db("manufacturer").collection("products");
 
-        console.log('connected');
+        // products : api 
+
+        app.get('/products',async(req,res)=>{
+            const products = await productCollection.find().toArray();
+            res.send(products);
+        })
         
     } catch (err) {
         console.log(err);
