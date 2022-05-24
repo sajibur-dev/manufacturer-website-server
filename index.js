@@ -107,9 +107,28 @@ const run = async () => {
       const result = await orderCollection.insertOne(orders);
       res.send(result);
     });
+
+    app.get("/orders/:uid",async(req,res)=>{
+      const uid = req.params.uid;
+      const query = {customerUid:uid}
+      const products = await orderCollection.find(query).toArray();
+      res.send(products)
+    })
+
+
+
+
+
+
+
   } catch (err) {
     console.log(err);
-  }
+  };
+
+  
+
+
+
 };
 
 run();
