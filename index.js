@@ -153,6 +153,12 @@ const run = async () => {
     app.get('/reviews',async(req,res) => {
       const reviews = await userReviews.find().toArray();
       res.send(reviews)
+    });
+
+    app.post('/reviews',async(req,res) => {
+      const review = req.body;
+      const result = await userReviews.insertOne(review);
+      res.send(result);
     })
 
 
