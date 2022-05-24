@@ -65,10 +65,10 @@ const run = async () => {
     // ##### user api  #####
     // #####    ######
 
-    app.put("/users/:uid", async (req, res) => {
-      const uid = req.params.uid;
+    app.put("/users/:email", async (req, res) => {
+      const email = req.params.email;
       const user = req.body;
-      const filter = { uid: uid };
+      const filter = { email: email };
       const options = { upsert: true };
       const updatedDoc = {
         $set: user,
@@ -78,7 +78,7 @@ const run = async () => {
         updatedDoc,
         options
       );
-      const token = jwt.sign({ uid: uid }, process.env.ACCESS_SECRET_TOKEN, {
+      const token = jwt.sign({ email: email }, process.env.ACCESS_SECRET_TOKEN, {
         expiresIn: "1d",
       });
       res.send({result,token});
