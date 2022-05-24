@@ -41,6 +41,7 @@ const run = async () => {
         await client.connect();
 
         const productCollection = client.db("manufacturer").collection("products");
+        const orderCollection = client.db("manufacturer").collection("orders");
 
         // products : api 
 
@@ -57,6 +58,16 @@ const run = async () => {
             const product = await productCollection.findOne(query);
             res.send(product);
 
+        });
+
+        // #####    #####
+        // ##### order detail #####
+        // #####    ######
+
+        app.post('/orders',async(req,res)=>{
+            const orders = req.body;
+            const result = await orderCollection.insertOne(orders);
+            res.send(result);
         })
         
     } catch (err) {
