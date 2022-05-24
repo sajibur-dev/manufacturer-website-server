@@ -62,6 +62,25 @@ const run = async () => {
     const userCollection = client.db("manufacturer").collection("users");
     const userReviews = client.db("manufacturer").collection("reviews");
 
+
+
+
+    // verify admin 
+
+    async function verifyAdmin(req,res,next){
+      const uid = req.decoded.uid;
+      const query = {uid:uid};
+      const user = await userCollection.findOne(query);
+      const isAdmin = user?.role === 'admin';
+      if(isAdmin){
+        next()
+      }else {
+        res.send(401).send({message:'unauthorize access'})
+      }
+    }
+
+
+
     // products : api
 
     app.get("/products", async (req, res) => {
@@ -102,6 +121,12 @@ const run = async () => {
     });
 
 
+    app.get('/users',veryfiJWT,async(req,res)=>{
+      const users = await userCollection.find().toArray();
+      res.send(users);
+    })
+
+
     // #####    #####
     // ##### admin api  #####
     // #####    ######
@@ -110,10 +135,22 @@ const run = async () => {
       const uid = req.params.uid;
       const query = {uid:uid};
       const user = await userCollection.findOne(query);
-      const isAdmin = user.role === 'admin' || false;
+      const isAdmin = user?.role === 'admin' || false;
       res.send({admin:isAdmin})
     })
 
+
+    app.put('/users/admin/:uid',veryfiJWT,verifyAdmin,async(req,res)=>{
+      const uid = req.params.uid;
+      const filter = {uid:uid};
+      const updatedDoc = {
+        $set:{
+          role:'admin'
+        }
+      }
+      const result = await userCollection.updateOne(filter,updatedDoc);
+      res.send(result);
+    })
 
     // #####    #####
     // ##### order detail #####
