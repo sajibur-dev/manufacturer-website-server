@@ -60,6 +60,7 @@ const run = async () => {
     const productCollection = client.db("manufacturer").collection("products");
     const orderCollection = client.db("manufacturer").collection("orders");
     const userCollection = client.db("manufacturer").collection("users");
+    const userReviews = client.db("manufacturer").collection("reviews");
 
     // products : api
 
@@ -145,6 +146,14 @@ const run = async () => {
 
 
 
+    // #####    #####
+    // ##### customer reviews #####
+    // #####    ######
+
+    app.get('/reviews',async(req,res) => {
+      const reviews = await userReviews.find().toArray();
+      res.send(reviews)
+    })
 
 
 
