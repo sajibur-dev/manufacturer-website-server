@@ -84,6 +84,20 @@ const run = async () => {
       res.send({result,token});
     });
 
+
+    // #####    #####
+    // ##### admin api  #####
+    // #####    ######
+
+    app.get('/admin/:uid',async(req,res)=>{
+      const uid = req.params.uid;
+      const query = {uid:uid};
+      const user = await userCollection.findOne(query);
+      const isAdmin = user.role === 'admin' || false;
+      res.send({admin:isAdmin})
+    })
+
+
     // #####    #####
     // ##### order detail #####
     // #####    ######
