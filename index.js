@@ -169,6 +169,11 @@ const run = async () => {
       res.send(result);
     });
 
+    app.get("/orders",veryfiJWT,verifyAdmin,async(req,res)=>{
+      const orders = await orderCollection.find().toArray();
+      res.send(orders);
+    })
+
     app.get("/orders/:uid",veryfiJWT,async(req,res)=>{
       const uid = req.params.uid;
       const decodeUid = req.decoded.uid;
@@ -181,7 +186,7 @@ const run = async () => {
     });
 
 
-    app.delete('/orders/:id',async(req,res)=>{
+    app.delete('/orders/:id',veryfiJWT,async(req,res)=>{
       const id = req.params.id;
       const query = {_id:ObjectId(id)};
       const result = await orderCollection.deleteOne(query);
