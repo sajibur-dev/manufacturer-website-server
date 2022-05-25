@@ -141,6 +141,14 @@ const run = async () => {
     app.get('/users',veryfiJWT,async(req,res)=>{
       const users = await userCollection.find().toArray();
       res.send(users);
+    });
+
+
+    app.get('/users/:uid',veryfiJWT,async(req,res)=>{
+      const uid = req.params.uid;
+      const query = {uid:uid};
+      const user = await userCollection.findOne(query);
+      res.send(user);
     })
 
 
