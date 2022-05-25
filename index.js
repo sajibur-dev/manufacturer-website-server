@@ -93,6 +93,14 @@ const run = async () => {
       console.log(body);
       const result = await productCollection.insertOne(body);
       res.send(result);
+    });
+
+
+    app.delete('/products/:id',veryfiJWT,verifyAdmin,async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id:ObjectId(id)};
+      const result = await productCollection.deleteOne(query);
+      res.send(result)
     })
 
     // get indevidual product :
