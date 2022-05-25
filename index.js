@@ -88,6 +88,13 @@ const run = async () => {
       res.send(products);
     });
 
+    app.post('/products',veryfiJWT,verifyAdmin,async(req,res)=>{
+      const body = req.body;
+      console.log(body);
+      const result = await productCollection.insertOne(body);
+      res.send(result);
+    })
+
     // get indevidual product :
 
     app.get("/products/:id", async (req, res) => {
