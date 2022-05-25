@@ -13,6 +13,8 @@ const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 // configaration :
 
 const port = process.env.PORT || 5000;
@@ -186,12 +188,13 @@ const run = async () => {
       const uid = req.params.uid;
       const decodeUid = req.decoded.uid;
       if(decodeUid === uid){
-
         const query = {customerUid:uid}
         const products = await orderCollection.find(query).toArray();
         res.send(products);
       }
     });
+
+   
 
 
     app.delete('/orders/:id',veryfiJWT,async(req,res)=>{
@@ -199,6 +202,46 @@ const run = async () => {
       const query = {_id:ObjectId(id)};
       const result = await orderCollection.deleteOne(query);
       res.send(result)
+    })
+
+
+    // #####    #####
+    // ##### Payment api #####
+    // #####    ######
+
+
+    
+    app.get("/orders/payment/:id",async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id:ObjectId(id)};
+      const product = await orderCollection.findOne(query);
+      res.send(product)
+    });
+
+    app.put('/orders/payment/:id',async(req,res)=>{
+      const id = req.params;
+      const filter = {_id:ObjectId(id)};
+      const updatedDoc = {
+        $set:{
+          paid:true,
+          status:'panding'
+        }
+      }
+      const result = await orderCollection.updateOne(filter,updatedDoc);
+      res.send(result)
+    })
+
+
+    app.post('/create-payment-intent',veryfiJWT,async(req,res)=>{
+      const {price} = req.body;
+      const amount = typeof price === 'number' ? price * 100 : null;
+      const paymentIntent =  await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      }) 
+
+      res.send({clientSecret: paymentIntent.client_secret})
     })
 
 
