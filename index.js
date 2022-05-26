@@ -47,6 +47,10 @@ function veryfiJWT(req,res,next) {
 // connect to mongodb database :
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASS}@cluster0.vx0t0.mongodb.net/?retryWrites=true&w=majority`;
+
+
+// `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASS}@cluster0.vx0t0.mongodb.net/?retryWrites=true&w=majority`;
+console.log(uri);
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -63,6 +67,7 @@ const run = async () => {
     const orderCollection = client.db("manufacturer").collection("orders");
     const userCollection = client.db("manufacturer").collection("users");
     const userReviews = client.db("manufacturer").collection("reviews");
+    const userProfile = client.db("manufacturer").collection("profiles");
 
 
 
@@ -270,6 +275,22 @@ const run = async () => {
       res.send(result);
     })
 
+    // #####    #####
+    // ##### profiles collection #####
+    // #####    ######
+
+    app.post('/profiles',async(req,res)=>{
+      const user = req.body;
+      const result = await userProfile.insertOne(user);
+      res.send(result);
+    });
+
+    app.get('/profiles/:uid',async(req,res)=>{
+      const uid = req.params.uid;
+      const query = {uid:uid}
+      const profile = await userProfile.findOne(query);
+      res.send(profile);
+    })
 
 
 
