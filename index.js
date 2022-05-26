@@ -241,7 +241,8 @@ const run = async () => {
 
 
     app.post('/create-payment-intent',veryfiJWT,async(req,res)=>{
-      const {price} = req.body;
+      const product = req.body;
+      const price = product.price;
       const amount = typeof price === 'number' ? price * 100 : null;
       const paymentIntent =  await stripe.paymentIntents.create({
         amount: amount,
