@@ -309,7 +309,7 @@ run();
 // main api :
 
 app.get("/", (req, res) => {
-  res.send({ message: "app is running" });
+  res.send({ message: "app is runnings" });
 });
 
 // server running :
